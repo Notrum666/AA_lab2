@@ -71,6 +71,15 @@ TEST(ArrayTests, InsertAt_CapacityIncreaseNotNeeded)
 	ASSERT_EQ(arr[1], 1);
 }
 
+TEST(ArrayTests, InsertAt_ComplexObject_CapacityIncreaseNotNeeded)
+{
+	Array<std::string> arr = Array<std::string>();
+	arr.insert(0, "1");
+	arr.insert(0, "2");
+	ASSERT_EQ(arr[0], "2");
+	ASSERT_EQ(arr[1], "1");
+}
+
 TEST(ArrayTests, InsertAt_CapacityIncreaseNeeded) 
 {
 	Array<int> arr = Array<int>(2);

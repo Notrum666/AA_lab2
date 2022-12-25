@@ -153,7 +153,8 @@ Array<T>::~Array()
 	for (int i = 0; i < _size; i++)
 		_arr[i].~T();
 
-	free(_arr);
+	if (_arr)
+		free(_arr);
 }
 
 template<typename T>
@@ -238,8 +239,13 @@ int Array<T>::insert(int index, const T& value)
 	}
 	else 
 	{
+		//TODO: create test for that V - done
+		//TODO: arr[_size] contains garbage - done
 		for (int i = _size; i > index; i--)
-			_arr[i] = std::move(_arr[i - 1]);
+		{
+			new (_arr + i) T(std::move(_arr[i - 1]));
+			_arr[i - 1].~T();
+		}
 
 		new (_arr + index) T(value);
 	}
@@ -256,8 +262,12 @@ void Array<T>::remove(int index)
 
 	_arr[index].~T();
 
+	// TODO: garbage at _arr[index] - done
 	for (int i = index; i < _size - 1; i++)
-		_arr[i] = std::move(_arr[i + 1]);
+	{
+		new (_arr + i) T(std::move(_arr[i + 1]));
+		_arr[i + 1].~T();
+	}
 
 	_size--;
 }
